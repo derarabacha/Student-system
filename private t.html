@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Student Result Dashboard</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:linear-gradient(135deg,#0f172a,#1e3a8a,#2563eb);
+  color:white;
+  padding:20px;
+}
+
+.card{
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(10px);
+  padding:20px;
+  border-radius:15px;
+  max-width:1000px;
+  margin:auto;
+}
+
+h2{text-align:center;}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:15px;
+  font-size:13px;
+}
+
+th,td{
+  border:1px solid rgba(255,255,255,0.3);
+  padding:8px;
+  text-align:center;
+}
+
+th{
+  background:rgba(0,191,255,0.3);
+}
+
+.subject{
+  background:rgba(255,255,255,0.1);
+  font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+<h2>My Exam Result</h2>
+
+<p id="name"></p>
+
+<table>
+  <tr>
+    <th>Subject</th>
+    <th>Test</th>
+    <th>Mid</th>
+    <th>Final</th>
+    <th>Assignment</th>
+    <th>Group Work</th>
+    <th>Quiz</th>
+    <th>Lab Report</th>
+    <th>Total</th>
+    <th>Average</th>
+  </tr>
+
+  <tr>
+    <td class="subject">Maths</td>
+    <td id="m_test"></td>
+    <td id="m_mid"></td>
+    <td id="m_final"></td>
+    <td id="m_assign"></td>
+    <td id="m_group"></td>
+    <td id="m_quiz"></td>
+    <td id="m_lab"></td>
+    <td id="m_total"></td>
+    <td id="m_avg"></td>
+  </tr>
+
+  <tr>
+    <td class="subject">Chemistry</td>
+    <td id="c_test"></td>
+    <td id="c_mid"></td>
+    <td id="c_final"></td>
+    <td id="c_assign"></td>
+    <td id="c_group"></td>
+    <td id="c_quiz"></td>
+    <td id="c_lab"></td>
+    <td id="c_total"></td>
+    <td id="c_avg"></td>
+  </tr>
+
+  <tr>
+    <td class="subject">Physics</td>
+    <td id="p_test"></td>
+    <td id="p_mid"></td>
+    <td id="p_final"></td>
+    <td id="p_assign"></td>
+    <td id="p_group"></td>
+    <td id="p_quiz"></td>
+    <td id="p_lab"></td>
+    <td id="p_total"></td>
+    <td id="p_avg"></td>
+  </tr>
+
+  <tr>
+    <td class="subject">Biology</td>
+    <td id="b_test"></td>
+    <td id="b_mid"></td>
+    <td id="b_final"></td>
+    <td id="b_assign"></td>
+    <td id="b_group"></td>
+    <td id="b_quiz"></td>
+    <td id="b_lab"></td>
+    <td id="b_total"></td>
+    <td id="b_avg"></td>
+  </tr>
+
+</table>
+
+<p id="rank"></p>
+
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyADbSzFOg0VLXm9YSLqRHg-5PEXKXIhwzk",
+  authDomain: "der-firebase.firebaseapp.com",
+  projectId: "der-firebase",
+  storageBucket: "der-firebase.firebasestorage.app",
+  messagingSenderId: "898462725543",
+  appId: "1:898462725543:web:e7741dc7191c71a70bf282"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+/* GET LOGIN DATA */
+const student = JSON.parse(localStorage.getItem("student"));
+
+if(!student){
+  window.location.href = "index.html";
+}
+
+const id = student.id;
+
+/* LOAD DATA */
+get(ref(db,"students/" + id)).then((snap)=>{
+
+  const s = snap.val();
+
+  document.getElementById("name").innerText = "Name: " + s.name;
+
+/* Maths */
+  document.getElementById("m_test").innerText = s.maths.test;
+  document.getElementById("m_mid").innerText = s.maths.mid;
+  document.getElementById("m_final").innerText = s.maths.final;
+  document.getElementById("m_assign").innerText = s.maths.assignment;
+  document.getElementById("m_group").innerText = s.maths.group;
+  document.getElementById("m_quiz").innerText = s.maths.quiz;
+  document.getElementById("m_lab").innerText = s.maths.lab;
+  document.getElementById("m_total").innerText = s.maths.total;
+  document.getElementById("m_avg").innerText = s.maths.average;
+
+/* Chemistry */
+  document.getElementById("c_test").innerText = s.chemistry.test;
+  document.getElementById("c_mid").innerText = s.chemistry.mid;
+  document.getElementById("c_final").innerText = s.chemistry.final;
+  document.getElementById("c_assign").innerText = s.chemistry.assignment;
+  document.getElementById("c_group").innerText = s.chemistry.group;
+  document.getElementById("c_quiz").innerText = s.chemistry.quiz;
+  document.getElementById("c_lab").innerText = s.chemistry.lab;
+  document.getElementById("c_total").innerText = s.chemistry.total;
+  document.getElementById("c_avg").innerText = s.chemistry.average;
+
+/* Physics */
+  document.getElementById("p_test").innerText = s.physics.test;
+  document.getElementById("p_mid").innerText = s.physics.mid;
+  document.getElementById("p_final").innerText = s.physics.final;
+  document.getElementById("p_assign").innerText = s.physics.assignment;
+  document.getElementById("p_group").innerText = s.physics.group;
+  document.getElementById("p_quiz").innerText = s.physics.quiz;
+  document.getElementById("p_lab").innerText = s.physics.lab;
+  document.getElementById("p_total").innerText = s.physics.total;
+  document.getElementById("p_avg").innerText = s.physics.average;
+
+/* Biology */
+  document.getElementById("b_test").innerText = s.biology.test;
+  document.getElementById("b_mid").innerText = s.biology.mid;
+  document.getElementById("b_final").innerText = s.biology.final;
+  document.getElementById("b_assign").innerText = s.biology.assignment;
+  document.getElementById("b_group").innerText = s.biology.group;
+  document.getElementById("b_quiz").innerText = s.biology.quiz;
+  document.getElementById("b_lab").innerText = s.biology.lab;
+  document.getElementById("b_total").innerText = s.biology.total;
+  document.getElementById("b_avg").innerText = s.biology.average;
+
+/* Rank */
+  document.getElementById("rank").innerText = "Rank: " + s.rank;
+
+});
+
+</script>
+
+</body>
+</html>

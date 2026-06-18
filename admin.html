@@ -1,0 +1,202 @@
+<html>  
+<head>  
+  <title>Student Form</title>  
+  
+  <style>  
+    body{  
+      margin:0;  
+      font-family:Arial;  
+      background: linear-gradient(135deg,#0f172a,#1e3a8a,#2563eb);  
+      padding:20px;  
+    }  
+  
+    .menu-btn{  
+      font-size:30px;  
+      cursor:pointer;  
+      padding:15px;  
+      color:white;  
+      position:fixed;  
+      top:10px;  
+      left:10px;  
+      z-index:1001;  
+      transition:0.3s;  
+    }  
+  
+    .menu-btn.active{  
+      transform:rotate(90deg);  
+      color:#00bfff;  
+    }  
+  
+    .sidebar{  
+      width:250px;  
+      height:100vh;  
+      background:rgba(0,0,0,0.85);  
+      position:fixed;  
+      left:-260px;  
+      top:0;  
+      transition:0.4s;  
+      padding-top:60px;  
+      backdrop-filter: blur(10px);  
+      z-index:1000;  
+    }  
+  
+    .sidebar a{  
+      display:block;  
+      color:white;  
+      text-decoration:none;  
+      padding:15px 20px;  
+      font-size:18px;  
+      border-bottom:1px solid rgba(255,255,255,0.2);  
+    }  
+  
+    .sidebar a:hover{  
+      background:#2563eb;  
+    }  
+  
+    .sidebar.active{  
+      left:0;  
+    }  
+  
+    .box{  
+      background:rgba(255,255,255,0.12);  
+      backdrop-filter: blur(10px);  
+      padding:25px;  
+      border-radius:15px;  
+      width:400px;  
+      margin:auto;  
+      margin-top:80px;  
+      color:white;  
+      background-image: url("wmo.jpg");  
+      background-size: cover;  
+      background-repeat: no-repeat;  
+      background-position: center;  
+    }  
+  
+    h2{text-align:center;}  
+  
+    input,button{  
+      width:100%;  
+      padding:12px;  
+      margin-top:10px;  
+      border:none;  
+      border-radius:10px;  
+    }  
+  
+    button{  
+      background:linear-gradient(45deg,#2563eb,#00bfff);  
+      color:white;  
+      font-weight:bold;  
+      cursor:pointer;  
+    }  
+  
+    .delete-box{  
+      margin-top:20px;  
+      padding:15px;  
+      background:rgba(255,0,0,0.15);  
+      border-radius:10px;  
+      border:1px solid red;  
+    }  
+  </style>  
+</head>  
+  
+<body>  
+  
+<div class="menu-btn" id="menuBtn">☰</div>  
+  
+<div class="sidebar" id="sidebar">  
+  <a href="Students Data.html">📊 Students Data</a>  
+  <a href="Private mark.html">Private mark</a>  
+  <a href="home.html">🚪Logout</a>  
+</div>  
+  
+<div class="box">  
+  
+  <h2>Add Student</h2>  
+  
+  <input type="text" id="studentId" placeholder="Student ID">  
+  
+  <input type="text" id="name" placeholder="Name">  
+  <input type="number" id="maths" placeholder="Maths">  
+  <input type="number" id="chemistry" placeholder="Chemistry">  
+  <input type="number" id="physics" placeholder="Physics">  
+  <input type="number" id="biology" placeholder="Biology">  
+  
+  <button id="addBtn">Add Student</button>  
+  
+  <div class="delete-box">  
+    <h3>Delete Student</h3>  
+  
+    <input type="text" id="deleteId" placeholder="Enter Student ID">  
+  
+    <button id="deleteBtn">Delete Student</button>  
+  </div>  
+  
+</div>  
+  
+<script type="module">  
+  
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";  
+import { getDatabase, ref, push, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";  
+  
+const firebaseConfig = {  
+  apiKey: "AIzaSyADbSzFOg0VLXm9YSLqRHg-5PEXKXIhwzk",  
+  authDomain: "der-firebase.firebaseapp.com",  
+  projectId: "der-firebase",  
+  storageBucket: "der-firebase.firebasestorage.app",  
+  messagingSenderId: "898462725543",  
+  appId: "1:898462725543:web:e7741dc7191c71a70bf282"  
+};  
+  
+const app = initializeApp(firebaseConfig);  
+const db = getDatabase(app);  
+  
+/* 🔥 ADD STUDENT WITH ID */  
+document.getElementById("addBtn").addEventListener("click", ()=>{  
+  
+  let id = document.getElementById("studentId").value;  
+  let name = document.getElementById("name").value;  
+  let maths = Number(document.getElementById("maths").value);  
+  let chemistry = Number(document.getElementById("chemistry").value);  
+  let physics = Number(document.getElementById("physics").value);  
+  let biology = Number(document.getElementById("biology").value);  
+  
+  let total = maths + chemistry + physics + biology;  
+  let average = total / 4;  
+  
+  push(ref(db,"students"),{  
+    id, name, maths, chemistry, physics, biology, total, average  
+  });  
+  
+  alert("Student Added");  
+});  
+  
+/* 🔥 DELETE BY ID */  
+document.getElementById("deleteBtn").addEventListener("click", ()=>{  
+  
+  let deleteId = document.getElementById("deleteId").value;  
+  
+  const studentsRef = ref(db,"students");  
+  
+  onValue(studentsRef,(snapshot)=>{  
+  
+    snapshot.forEach(child=>{  
+      if(child.val().id === deleteId){  
+        remove(child.ref);  
+      }  
+    });  
+  
+  },{onlyOnce:true});  
+  
+  alert("Student Deleted (if found)");  
+});  
+  
+/* TOGGLE */  
+document.getElementById("menuBtn").addEventListener("click",function(){  
+  document.getElementById("sidebar").classList.toggle("active");  
+  this.classList.toggle("active");  
+});  
+  
+</script>  
+  
+</body>  
+</html>
