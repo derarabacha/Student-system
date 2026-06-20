@@ -164,12 +164,20 @@ document.getElementById("addBtn").addEventListener("click", ()=>{
   let total = maths + chemistry + physics + biology;  
   let average = total / 4;  
   
-  push(ref(db,"students"),{  
-    id, name, maths, chemistry, physics, biology, total, average  
-  });  
+  import { set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
   
   alert("Student Added");  
 });  
+  set(ref(db,"students/"+id),{
+  id,
+  name,
+  maths,
+  chemistry,
+  physics,
+  biology,
+  total,
+  average
+});
   
 /* 🔥 DELETE BY ID */  
 document.getElementById("deleteBtn").addEventListener("click", ()=>{  
