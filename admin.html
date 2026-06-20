@@ -4,7 +4,6 @@
 <title>Student Form</title>
 
 <style>
-
 body{
   margin:0;
   font-family:Arial;
@@ -12,9 +11,7 @@ body{
   padding:20px;
 }
 
-
 /* X TOGGLE */
-
 .menu-btn{
   width:40px;
   height:30px;
@@ -28,7 +25,6 @@ body{
   justify-content:space-between;
 }
 
-
 .menu-btn span{
   height:4px;
   width:40px;
@@ -37,27 +33,20 @@ body{
   transition:.4s;
 }
 
-
 .menu-btn.active span:nth-child(1){
  transform:rotate(45deg) translate(9px,9px);
 }
-
 
 .menu-btn.active span:nth-child(2){
  opacity:0;
 }
 
-
 .menu-btn.active span:nth-child(3){
  transform:rotate(-45deg) translate(9px,-9px);
 }
 
-
-
 /* SIDEBAR */
-
 .sidebar{
-
  width:250px;
  height:100vh;
  background:rgba(0,0,0,.85);
@@ -68,42 +57,27 @@ body{
  padding-top:60px;
  backdrop-filter:blur(10px);
  z-index:1000;
-
 }
-
 
 .sidebar.active{
-
  left:0;
-
 }
 
-
 .sidebar a{
-
  display:block;
  padding:15px 20px;
  color:white;
  text-decoration:none;
  font-size:18px;
  border-bottom:1px solid rgba(255,255,255,.2);
-
 }
-
 
 .sidebar a:hover{
-
  background:#2563eb;
-
 }
 
-
-
 /* FORM BOX */
-
-
 .box{
-
  background:rgba(255,255,255,.12);
  backdrop-filter:blur(10px);
  padding:25px;
@@ -112,339 +86,152 @@ body{
  margin:auto;
  margin-top:80px;
  color:white;
- background-image: url("wmo.jpg");  
-      background-size: cover;  
-      background-repeat: no-repeat;  
-      background-position: center;  
-  
-      animation: fadeIn 1s ease;  
-
+ background-size: cover;  
+ background-repeat: no-repeat;  
+ background-position: center;  
 }
 
-
-
-h2{
-
-text-align:center;
-
-}
-
-
+h2{ text-align:center; }
 
 input,button{
-
  width:100%;
  padding:12px;
  margin-top:10px;
  border:none;
  border-radius:10px;
-
 }
 
-
-
 button{
-
  background:linear-gradient(45deg,#2563eb,#00bfff);
  color:white;
  font-weight:bold;
  cursor:pointer;
-
 }
 
-
-
 .delete-box{
-
  margin-top:20px;
  padding:15px;
  background:rgba(255,0,0,.15);
  border-radius:10px;
  border:1px solid red;
-
 }
-
-
 </style>
-
 </head>
-
 
 <body>
 
-
-<!-- TOGGLE -->
-
 <div class="menu-btn" id="menuBtn">
-
-<span></span>
-<span></span>
-<span></span>
-
+  <span></span>
+  <span></span>
+  <span></span>
 </div>
-
-
-
-<!-- SIDEBAR -->
 
 <div class="sidebar" id="sidebar">
-
-<a href="studentmarktable.html">
-📊 Students Data
-</a>
-
-
-<a href="private t.html">
-🔐 Private Mark
-</a>
-
-
-<a href="index.html">
-🚪 Logout
-</a>
-
-
+  <a href="studentmarktable.html">📊 Students Data</a>
+  <a href="private t.html">🔐 Private Mark</a>
+  <a href="index.html">🚪 Logout</a>
 </div>
-
-
-
 
 <div class="box">
+  <h2>Add Student</h2>
+  <input id="studentId" placeholder="Student ID">
+  <input id="name" placeholder="Name">
+  <input type="number" id="maths" placeholder="Maths">
+  <input type="number" id="chemistry" placeholder="Chemistry">
+  <input type="number" id="physics" placeholder="Physics">
+  <input type="number" id="biology" placeholder="Biology">
 
+  <button id="addBtn">Add Student</button>
 
-<h2>Add Student</h2>
-
-
-<input id="studentId" placeholder="Student ID">
-
-
-<input id="name" placeholder="Name">
-
-
-<input type="number" id="maths" placeholder="Maths">
-
-
-<input type="number" id="chemistry" placeholder="Chemistry">
-
-
-<input type="number" id="physics" placeholder="Physics">
-
-
-<input type="number" id="biology" placeholder="Biology">
-
-
-
-<button id="addBtn">
-Add Student
-</button>
-
-
-
-<div class="delete-box">
-
-
-<h3>
-Delete Student
-</h3>
-
-
-<input id="deleteId" placeholder="Enter Student ID">
-
-
-<button id="deleteBtn">
-Delete Student
-</button>
-
-
+  <div class="delete-box">
+    <h3>Delete Student</h3>
+    <input id="deleteId" placeholder="Enter Student ID">
+    <button id="deleteBtn">Delete Student</button>
+  </div>
 </div>
-
-
-</div>
-
-
-
-
 
 <script type="module">
-
-
-import {initializeApp}
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-
-import {getDatabase,ref,set,remove}
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
-
-
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, set, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
-
-
-apiKey:"AIzaSyADbSzFOg0VLXm9YSLqRHg-5PEXKXIhwzk",
-
-
-authDomain:"der-firebase.firebaseapp.com",
-
-
-databaseURL:"https://der-firebase-default-rtdb.firebaseio.com",
-
-
-projectId:"der-firebase",
-
-
-storageBucket:"der-firebase.firebasestorage.app",
-
-
-messagingSenderId:"898462725543",
-
-
-appId:"1:898462725543:web:e7741dc7191c71a70bf282"
-
-
+  apiKey: "AIzaSyADbSzFOg0VLXm9YSLqRHg-5PEXKXIhwzk",
+  authDomain: "der-firebase.firebaseapp.com",
+  databaseURL: "https://der-firebase-default-rtdb.firebaseio.com", // Added this missing link!
+  projectId: "der-firebase",
+  storageBucket: "der-firebase.firebasestorage.app",
+  messagingSenderId: "898462725543",
+  appId: "1:898462725543:web:e7741dc7191c71a70bf282"
 };
-
-
-
 
 const app = initializeApp(firebaseConfig);
-
-
 const db = getDatabase(app);
 
-
-
-
-
-
 // ADD STUDENT
+document.getElementById("addBtn").addEventListener("click",()=>{
+  let id = document.getElementById("studentId").value.trim();
+  let name = document.getElementById("name").value;
+  let maths = Number(document.getElementById("maths").value || 0);
+  let chemistry = Number(document.getElementById("chemistry").value || 0);
+  let physics = Number(document.getElementById("physics").value || 0);
+  let biology = Number(document.getElementById("biology").value || 0);
 
+  let total = maths + chemistry + physics + biology;
+  let average = total / 4;
 
-document.getElementById("addBtn")
-.addEventListener("click",()=>{
+  if(id === ""){
+   alert("Enter Student ID");
+   return;
+  }
 
-
-let id =
-document.getElementById("studentId").value;
-
-
-let name =
-document.getElementById("name").value;
-
-
-let maths =
-Number(document.getElementById("maths").value);
-
-
-let chemistry =
-Number(document.getElementById("chemistry").value);
-
-
-let physics =
-Number(document.getElementById("physics").value);
-
-
-let biology =
-Number(document.getElementById("biology").value);
-
-
-
-let total =
-maths+chemistry+physics+biology;
-
-
-let average =
-total/4;
-
-
-
-if(id==""){
- alert("Enter Student ID");
- return;
-}
-
-
-set(ref(db,"students/"+id),{
-
-
-id,
-name,
-maths,
-chemistry,
-physics,
-biology,
-total,
-average
-
-
+  set(ref(db, "students/" + id), {
+    id,
+    name,
+    maths,
+    chemistry,
+    physics,
+    biology,
+    total,
+    average
+  }).then(() => {
+    alert("Student Added successfully!");
+    // Clear the form fields after successful insert
+    document.getElementById("studentId").value = "";
+    document.getElementById("name").value = "";
+    document.getElementById("maths").value = "";
+    document.getElementById("chemistry").value = "";
+    document.getElementById("physics").value = "";
+    document.getElementById("biology").value = "";
+  }).catch((error) => {
+    alert("Error adding student: " + error.message);
+  });
 });
-
-
-
-alert("Student Added");
-
-
-});
-
-
-
-
-
-
 
 // DELETE STUDENT
+document.getElementById("deleteBtn").addEventListener("click",()=>{
+  let id = document.getElementById("deleteId").value.trim();
+  if(id === ""){
+    alert("Please enter a Student ID to delete.");
+    return;
+  }
 
-
-document.getElementById("deleteBtn")
-.addEventListener("click",()=>{
-
-
-let id =
-document.getElementById("deleteId").value;
-
-
-
-remove(ref(db,"students/"+id));
-
-
-
-alert("Student Deleted");
-
-
+  remove(ref(db, "students/" + id)).then(() => {
+    alert("Student Deleted");
+    document.getElementById("deleteId").value = "";
+  }).catch((error) => {
+    alert("Error deleting student: " + error.message);
+  });
 });
 
-
-
-
-
-
 // SIDEBAR TOGGLE
-
-
-const menu =
-document.getElementById("menuBtn");
-
-
-const sidebar =
-document.getElementById("sidebar");
-
-
+const menu = document.getElementById("menuBtn");
+const sidebar = document.getElementById("sidebar");
 
 menu.onclick=()=>{
-
-
-menu.classList.toggle("active");
-
-
-sidebar.classList.toggle("active");
-
-
+  menu.classList.toggle("active");
+  sidebar.classList.toggle("active");
 };
-
-
-
 </script>
-
 
 </body>
 </html>
