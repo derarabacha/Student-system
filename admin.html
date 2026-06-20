@@ -157,7 +157,7 @@ import { getDatabase, ref, set, remove } from "https://www.gstatic.com/firebasej
 const firebaseConfig = {
   apiKey: "AIzaSyADbSzFOg0VLXm9YSLqRHg-5PEXKXIhwzk",
   authDomain: "der-firebase.firebaseapp.com",
-  databaseURL: "https://der-firebase-default-rtdb.firebaseio.com", // Added this missing link!
+  databaseURL: "https://der-firebase-default-rtdb.firebaseio.com", 
   projectId: "der-firebase",
   storageBucket: "der-firebase.firebasestorage.app",
   messagingSenderId: "898462725543",
@@ -184,6 +184,7 @@ document.getElementById("addBtn").addEventListener("click",()=>{
    return;
   }
 
+  // Saving data containing the security pass block validation element
   set(ref(db, "students/" + id), {
     id,
     name,
@@ -192,10 +193,10 @@ document.getElementById("addBtn").addEventListener("click",()=>{
     physics,
     biology,
     total,
-    average
+    average,
+    passcode: "MySecretAdminPass123" 
   }).then(() => {
     alert("Student Added successfully!");
-    // Clear the form fields after successful insert
     document.getElementById("studentId").value = "";
     document.getElementById("name").value = "";
     document.getElementById("maths").value = "";
@@ -215,7 +216,12 @@ document.getElementById("deleteBtn").addEventListener("click",()=>{
     return;
   }
 
-  remove(ref(db, "students/" + id)).then(() => {
+  // Modifies data node to trigger the clearance passcode pattern matching rules smoothly
+  set(ref(db, "students/" + id), {
+    passcode: "MySecretAdminPass123"
+  }).then(() => {
+    return remove(ref(db, "students/" + id));
+  }).then(() => {
     alert("Student Deleted");
     document.getElementById("deleteId").value = "";
   }).catch((error) => {
