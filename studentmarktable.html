@@ -201,27 +201,44 @@ const tbody = document.getElementById("tableBody");
 
 onValue(ref(db,"students"), (snapshot)=>{
 
-  tbody.innerHTML = "";
 
-  snapshot.forEach(child=>{
-    const s = child.val();
+if(!snapshot.exists()){
 
-    tbody.innerHTML += `
-      <tr>
-        <td>${s.id}</td>
-        <td>${s.name}</td>
-        <td>${s.maths}</td>
-        <td>${s.chemistry}</td>
-        <td>${s.physics}</td>
-        <td>${s.biology}</td>
-        <td><b>${s.total}</b></td>
-        <td><b>${Number(s.average).toFixed(1)}</b></td>
-      </tr>
-    `;
-  });
+console.log("No students found");
+
+return;
+
+}
+
+
+tbody.innerHTML="";
+
+
+snapshot.forEach(child=>{
+
+const s = child.val();
+
+
+tbody.innerHTML += `
+<tr>
+
+<td>${s.id}</td>
+<td>${s.name}</td>
+<td>${s.maths}</td>
+<td>${s.chemistry}</td>
+<td>${s.physics}</td>
+<td>${s.biology}</td>
+<td>${s.total}</td>
+<td>${Number(s.average).toFixed(1)}</td>
+
+</tr>
+`;
+
 
 });
 
+
+});
 </script>
 
 <!-- TOGGLE SCRIPT -->
