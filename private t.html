@@ -156,6 +156,197 @@ const id = student.id;
 /* LOAD DATA */
 get(ref(db,"students/" + id)).then((snap)=>{
 
+  if(!snap.exists()) {
+    console.error("No student data found for ID: " + id);
+    document.getElementById("name").innerText = "No record found for ID: " + id;
+    return;
+  }
+
+  const s = snap.val();
+
+  // Displays student name layout smoothly
+  document.getElementById("name").innerText = "Name: " + (s.name || "N/A");
+
+  // Helper function to safely output nested values or plain numbers
+  const formatField = (val) => (val !== undefined && val !== null ? val : "-");
+
+  /* Maths */
+  document.getElementById("m_test").innerText   = formatField(s.maths?.test);
+  document.getElementById("m_mid").innerText    = formatField(s.maths?.mid);
+  document.getElementById("m_final").innerText  = formatField(s.maths?.final);
+  document.getElementById("m_assign").innerText = formatField(s.maths?.assignment);
+  document.getElementById("m_group").innerText  = formatField(s.maths?.group);
+  document.getElementById("m_quiz").innerText   = formatField(s.maths?.quiz);
+  document.getElementById("m_lab").innerText    = formatField(s.maths?.lab);
+  document.getElementById("m_total").innerText  = typeof s.maths === "object" ? formatField(s.maths?.total) : formatField(s.maths);
+  document.getElementById("m_avg").innerText    = typeof s.maths === "object" ? formatField(s.maths?.average) : formatField(s.maths);
+
+  /* Chemistry */
+  document.getElementById("c_test").innerText   = formatField(s.chemistry?.test);
+  document.getElementById("c_mid").innerText    = formatField(s.chemistry?.mid);
+  document.getElementById("c_final").innerText  = formatField(s.chemistry?.final);
+  document.getElementById("c_assign").innerText = formatField(s.chemistry?.assignment);
+  document.getElementById("c_group").innerText  = formatField(s.chemistry?.group);
+  document.getElementById("c_quiz").innerText   = formatField(s.chemistry?.quiz);
+  document.getElementById("c_lab").innerText    = formatField(s.chemistry?.lab);
+  document.getElementById("c_total").innerText  = typeof s.chemistry === "object" ? formatField(s.chemistry?.total) : formatField(s.chemistry);
+  document.getElementById("c_avg").innerText    = typeof s.chemistry === "object" ? formatField(s.chemistry?.average) : formatField(s.chemistry);
+
+  /* Physics */
+  document.getElementById("p_test").innerText   = formatField(s.physics?.test);
+  document.getElementById("p_mid").innerText    = formatField(s.physics?.mid);
+  document.getElementById("p_final").innerText  = formatField(s.physics?.final);
+  document.getElementById("p_assign").innerText = formatField(s.physics?.assignment);
+  document.getElementById("p_group").innerText  = formatField(s.physics?.group);
+  document.getElementById("p_quiz").innerText   = formatField(s.physics?.quiz);
+  document.getElementById("p_lab").innerText    = formatField(s.physics?.lab);
+  document.getElementById("p_total").innerText  = typeof s.physics === "object" ? formatField(s.physics?.total) : formatField(s.physics);
+  document.getElementById("p_avg").innerText    = typeof s.physics === "object" ? formatField(s.physics?.average) : formatField(s.physics);
+
+  /* Biology */
+  document.getElementById("b_test").innerText   = formatField(s.biology?.test);
+  document.getElementById("b_mid").innerText    = formatField(s.biology?.mid);
+  document.getElementById("b_final").innerText  = formatField(s.biology?.final);
+  document.getElementById("b_assign").innerText = formatField(s.biology?.assignment);
+  document.getElementById("b_group").innerText  = formatField(s.biology?.group);
+  document.getElementById("b_quiz").innerText   = formatField(s.biology?.quiz);
+  document.getElementById("b_lab").innerText    = formatField(s.biology?.lab);
+  document.getElementById("b_total").innerText  = typeof s.biology === "object" ? formatField(s.biology?.total) : formatField(s.biology);
+  document.getElementById("b_avg").innerText    = typeof s.biology === "object" ? formatField(s.biology?.average) : formatField(s.biology);
+
+  /* Rank Layout rendering */
+  document.getElementById("rank").innerText = "Rank: " + formatField(s.rank);
+
+}).catch((error) => {
+  console.error("Error fetching data from Firebase:", error);
+});
+
+</script>
+
+</body>
+</html>
+}
+
+th{
+  background:rgba(0,191,255,0.3);
+}
+
+.subject{
+  background:rgba(255,255,255,0.1);
+  font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+<h2>My Exam Result</h2>
+
+<p id="name"></p>
+
+<table>
+  <tr>
+    <th>Subject</th>
+    <th>Test</th>
+    <th>Mid</th>
+    <th>Final</th>
+    <th>Assignment</th>
+    <th>Group Work</th>
+    <th>Quiz</th>
+    <th>Lab Report</th>
+    <th>Total</th>
+    <th>Average</th>
+  </tr>
+
+  <tr>
+    <td class="subject">Maths</td>
+    <td id="m_test"></td>
+    <td id="m_mid"></td>
+    <td id="m_final"></td>
+    <td id="m_assign"></td>
+    <td id="m_group"></td>
+    <td id="m_quiz"></td>
+    <td id="m_lab"></td>
+    <td id="m_total"></td>
+    <td id="m_avg"></td>
+  </tr>
+
+  <tr>
+    <td class="subject">Chemistry</td>
+    <td id="c_test"></td>
+    <td id="c_mid"></td>
+    <td id="c_final"></td>
+    <td id="c_assign"></td>
+    <td id="c_group"></td>
+    <td id="c_quiz"></td>
+    <td id="c_lab"></td>
+    <td id="c_total"></td>
+    <td id="c_avg"></td>
+  </tr>
+
+  <tr>
+    <td class="subject">Physics</td>
+    <td id="p_test"></td>
+    <td id="p_mid"></td>
+    <td id="p_final"></td>
+    <td id="p_assign"></td>
+    <td id="p_group"></td>
+    <td id="p_quiz"></td>
+    <td id="p_lab"></td>
+    <td id="p_total"></td>
+    <td id="p_avg"></td>
+  </tr>
+
+  <tr>
+    <td class="subject">Biology</td>
+    <td id="b_test"></td>
+    <td id="b_mid"></td>
+    <td id="b_final"></td>
+    <td id="b_assign"></td>
+    <td id="b_group"></td>
+    <td id="b_quiz"></td>
+    <td id="b_lab"></td>
+    <td id="b_total"></td>
+    <td id="b_avg"></td>
+  </tr>
+
+</table>
+
+<p id="rank"></p>
+
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyADbSzFOg0VLXm9YSLqRHg-5PEXKXIhwzk",
+  authDomain: "der-firebase.firebaseapp.com",
+  projectId: "der-firebase",
+  storageBucket: "der-firebase.firebasestorage.app",
+  messagingSenderId: "898462725543",
+  appId: "1:898462725543:web:e7741dc7191c71a70bf282"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+/* GET LOGIN DATA */
+const student = JSON.parse(localStorage.getItem("student"));
+
+if(!student){
+  window.location.href = "index.html";
+}
+
+const id = student.id;
+
+/* LOAD DATA */
+get(ref(db,"students/" + id)).then((snap)=>{
+
   const s = snap.val();
 
   document.getElementById("name").innerText = "Name: " + s.name;
