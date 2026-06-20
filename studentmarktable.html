@@ -181,64 +181,46 @@ tr:hover{
 <!-- FIREBASE -->
 <script type="module">
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { initializeApp } 
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import { getDatabase, ref, onValue } 
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyADbSzFOg0VLXm9YSLqRHg-5PEXKXIhwzk",
-  authDomain: "der-firebase.firebaseapp.com",
-  databaseURL: "https://der-firebase-default-rtdb.firebaseio.com",
-  projectId: "der-firebase",
-  storageBucket: "der-firebase.firebasestorage.app",
-  messagingSenderId: "898462725543",
-  appId: "1:898462725543:web:e7741dc7191c71a70bf282"
+  apiKey: "...",
+  authDomain: "...",
+  databaseURL: "...",
+  projectId: "..."
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-const tbody = document.getElementById("tableBody");
+// 👇 THIS IS WHERE onValue GOES
+const tbody = document.querySelector("tbody");
 
-onValue(ref(db,"students"), (snapshot)=>{
+onValue(ref(db, "students"), (snapshot) => {
+  tbody.innerHTML = "";
 
+  snapshot.forEach((child) => {
+    const s = child.val();
 
-if(!snapshot.exists()){
-
-console.log("No students found");
-
-return;
-
-}
-
-
-tbody.innerHTML="";
-
-
-snapshot.forEach(child=>{
-
-const s = child.val();
-
-
-tbody.innerHTML += `
-<tr>
-
-<td>${s.id}</td>
-<td>${s.name}</td>
-<td>${s.maths}</td>
-<td>${s.chemistry}</td>
-<td>${s.physics}</td>
-<td>${s.biology}</td>
-<td>${s.total}</td>
-<td>${Number(s.average).toFixed(1)}</td>
-
-</tr>
-`;
-
-
+    tbody.innerHTML += `
+      <tr>
+        <td>${s.id}</td>
+        <td>${s.name}</td>
+        <td>${s.maths}</td>
+        <td>${s.chemistry}</td>
+        <td>${s.physics}</td>
+        <td>${s.biology}</td>
+        <td>${s.total}</td>
+        <td>${Number(s.average).toFixed(2)}</td>
+      </tr>
+    `;
+  });
 });
 
-
-});
 </script>
 
 <!-- TOGGLE SCRIPT -->
