@@ -19,12 +19,8 @@ body{
   color:white;
 }
 
-/* TOP BAR */
-.topbar{
-  padding:15px;
-}
+.topbar{ padding:15px; }
 
-/* 🔥 TOGGLE BUTTON (X ONLY) */
 .menu{
   width:40px;
   height:30px;
@@ -42,20 +38,6 @@ body{
   transition:0.4s;
 }
 
-/* X animation */
-.menu.active span:nth-child(1){
-  transform:rotate(45deg) translate(7px,7px);
-}
-
-.menu.active span:nth-child(2){
-  opacity:0;
-}
-
-.menu.active span:nth-child(3){
-  transform:rotate(-45deg) translate(7px,-7px);
-}
-
-/* 🔥 SIDEBAR */
 .sidebar{
   position:fixed;
   top:0;
@@ -82,25 +64,16 @@ body{
   color:black;
 }
 
-.sidebar.active{
-  left:0;
-}
+.sidebar.active{ left:0; }
 
-/* TITLE */
 .title{
   text-align:center;
   margin-top:10px;
 }
 
-.title h1{
-  font-size:32px;
-}
+.title h1{ font-size:32px; }
+.title p{ opacity:0.9; }
 
-.title p{
-  opacity:0.9;
-}
-
-/* TABLE */
 .table-container{
   margin:30px auto;
   width:95%;
@@ -122,26 +95,19 @@ th,td{
   border-bottom:1px solid rgba(255,255,255,0.1);
 }
 
-th{
-  background:rgba(255,255,255,0.15);
-}
-
-tr:hover{
-  background:rgba(255,255,255,0.08);
-}
+th{ background:rgba(255,255,255,0.15); }
+tr:hover{ background:rgba(255,255,255,0.08); }
 </style>
 </head>
 
 <body>
 
-<!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
-  <a href="admin.html">📊 Students Data</a>
-  <a href="#">🔐 Private Mark</a>
+  <a href="admin.html">📊 Add Students Data</a>
+  <a href="private t.html">🔐 Private Mark</a>
   <a href="index.html">🚪 Logout</a>
 </div>
 
-<!-- TOP BAR -->
 <div class="topbar">
   <div class="menu" id="menuBtn">
     <span></span>
@@ -150,15 +116,12 @@ tr:hover{
   </div>
 </div>
 
-<!-- TITLE -->
 <div class="title">
   <h1>STUDENT TABLE</h1>
   <p>Student Ranking & Performance Dashboard</p>
 </div>
 
-<!-- TABLE -->
 <div class="table-container">
-
 <table>
   <thead>
     <tr>
@@ -172,75 +135,75 @@ tr:hover{
       <th>Average</th>
     </tr>
   </thead>
-
   <tbody id="tableBody"></tbody>
 </table>
-
 </div>
 
-<!-- FIREBASE -->
 <script type="module">
-
-import { initializeApp } 
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-import { getDatabase, ref, onValue } 
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey:"AIzaSyADbSzFOg0VLXm9YSLqRHg-5PEXKXIhwzk",
-
-authDomain:"der-firebase.firebaseapp.com",
-
-databaseURL:"https://der-firebase-default-rtdb.firebaseio.com",
-
-projectId:"der-firebase",
-
-storageBucket:"der-firebase.firebasestorage.app",
-
-messagingSenderId:"898462725543",
-
-appId:"1:898462725543:web:e7741dc7191c71a70bf282"
+  apiKey: "AIzaSyADbSzFOg0VLXm9YSLqRHg-5PEXKXIhwzk",
+  authDomain: "der-firebase.firebaseapp.com",
+  databaseURL: "https://der-firebase-default-rtdb.firebaseio.com",
+  projectId: "der-firebase",
+  storageBucket: "der-firebase.firebasestorage.app",
+  messagingSenderId: "898462725543",
+  appId: "1:898462725543:web:e7741dc7191c71a70bf282"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// 👇 THIS IS WHERE onValue GOES
-const tbody = document.querySelector("tbody");
+const tbody = document.getElementById("tableBody");
 
+// Reads ALL students under the "students" node
 onValue(ref(db, "students"), (snapshot) => {
-  tbody.innerHTML = "";
+  tbody.innerHTML = ""; // Clear existing table rows
+
+  if(!snapshot.exists()){
+    tbody.innerHTML = "<tr><td colspan='8'>No students found. Add some from Admin!</td></tr>";
+    return;
+  }
 
   snapshot.forEach((child) => {
     const s = child.val();
+    
+    // Safety check if total or average are saved as objects or raw properties
+    const displayTotal = typeof s.maths === "object" ? (s.total || 0) : (Number(s.maths || 0) + Number(s.chemistry || 0) + Number(s.physics || 0) + Number(s.biology || 0));
+    const displayAverage = typeof s.maths === "object" ? (s.average || 0) : (displayTotal / 4);
+
+    // Dynamic extraction handling simple data patterns or structured objects
+    const mathsScore = typeof s.maths === "object" ? (s.maths?.total || "-") : (s.maths ?? "-");
+    const chemScore = typeof s.chemistry === "object" ? (s.chemistry?.total || "-") : (s.chemistry ?? "-");
+    const physScore = typeof s.physics === "object" ? (s.physics?.total || "-") : (s.physics ?? "-");
+    const bioScore = typeof s.biology === "object" ? (s.biology?.total || "-") : (s.biology ?? "-");
 
     tbody.innerHTML += `
       <tr>
-        <td>${s.id}</td>
-        <td>${s.name}</td>
-        <td>${s.maths}</td>
-        <td>${s.chemistry}</td>
-        <td>${s.physics}</td>
-        <td>${s.biology}</td>
-        <td>${s.total}</td>
-        <td>${Number(s.average).toFixed(2)}</td>
+        <td>${s.id || child.key}</td>
+        <td>${s.name || "Unnamed"}</td>
+        <td>${mathsScore}</td>
+        <td>${chemScore}</td>
+        <td>${physScore}</td>
+        <td>${bioScore}</td>
+        <td>${displayTotal}</td>
+        <td>${Number(displayAverage).toFixed(2)}</td>
       </tr>
     `;
   });
 });
-
 </script>
 
-<!-- TOGGLE SCRIPT -->
 <script>
 const menu = document.getElementById("menuBtn");
 const sidebar = document.getElementById("sidebar");
 
-menu.addEventListener("click", ()=>{
+menu.onclick = () => {
   menu.classList.toggle("active");
   sidebar.classList.toggle("active");
-});
+};
 </script>
 
 </body>
